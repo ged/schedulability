@@ -1,0 +1,9 @@
+.simplecov
+ChangeLog
+History.rdoc
+Manifest.txt
+README.rdoc
+Rakefile
+lib/schedulability.rb
+spec/helpers.rb
+spec/schedulability_spec.rb

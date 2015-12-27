@@ -1,0 +1,8 @@
+^doc/
+^coverage/
+^pkg/
+\.DS_Store
+ChangeLog
+^\.rbx/
+\.rbx/
+\.lock$
