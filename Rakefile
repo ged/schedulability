@@ -24,6 +24,8 @@ hoespec = Hoe.spec 'schedulability' do
 	self.developer 'Michael Granger', 'ged@FaerieMUD.org'
 	self.developer 'Mahlon E. Smith', 'mahlon@martini.nu'
 
+	self.dependency 'loggability',     '~> 0.11'
+
 	self.dependency 'timecop',         '~> 0.8', :developer
 	self.dependency 'hoe-deveiate',    '~> 0.4', :developer
 	self.dependency 'hoe-bundler',     '~> 1.2', :developer
