@@ -1,9 +1,13 @@
+.editorconfig
 .simplecov
 ChangeLog
-History.rdoc
+History.md
 Manifest.txt
-README.rdoc
+README.md
 Rakefile
 lib/schedulability.rb
+lib/schedulability/exceptions.rb
+lib/schedulability/schedule.rb
 spec/helpers.rb
+spec/schedulability/schedule_spec.rb
 spec/schedulability_spec.rb
