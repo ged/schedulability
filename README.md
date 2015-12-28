@@ -174,8 +174,8 @@ methods that return a changed copy of the original:
 ## Contributing
 
 You can check out the current development source with
-Mercurial[http://bitbucket.org/ged/schedulability], or if you prefer Git, via
-{its Github mirror}[https://github.com/ged/schedulability].
+[Mercurial](https://bitbucket.org/ged/schedulability), or if you prefer Git, via
+[its Github mirror](https://github.com/ged/schedulability).
 
 After checking out the source, run:
 

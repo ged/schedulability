@@ -21,6 +21,7 @@ if ENV['COVERAGE']
 end
 
 require 'schedulability'
+require 'loggability/spechelpers'
 
 
 # Helpers specific to Schedulability specs
@@ -38,7 +39,7 @@ RSpec.configure do |c|
 		mock.syntax = :expect
 	end
 
+	c.include( Loggability::SpecHelpers )
 	c.include( Schedulability::SpecHelpers )
-
 end
 
