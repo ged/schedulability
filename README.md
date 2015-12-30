@@ -159,6 +159,13 @@ methods that return a changed copy of the original:
         send_email( "Stuff happened." )
     end
 
+	### Enumerators
+	on_duty.each_minute
+	# => #<Enumerator: ...>
+	on_duty.each_hour
+	# => #<Enumerator: ...>
+	on_duty.each_day
+	# => #<Enumerator: ...>
 
 
 ## Prerequisites

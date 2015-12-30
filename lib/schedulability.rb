@@ -21,6 +21,7 @@ module Schedulability
 
 
 	autoload :Schedule, 'schedulability/schedule'
+	autoload :Parser, 'schedulability/parser'
 	autoload :TimeRefinements, 'schedulability/mixins'
 
 end # module Schedulability
