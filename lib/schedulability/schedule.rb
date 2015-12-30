@@ -27,7 +27,8 @@ class Schedulability::Schedule
 
 	### Create a new Schedule using the specified +periods+.
 	def initialize( *periods )
-		@periods = periods
+		@periods = periods.flatten
+		@periods.freeze
 	end
 
 
@@ -66,6 +67,61 @@ class Schedulability::Schedule
 		end
 	end
 
+
+	### Returns +true+ if the time periods for +other_schedule+ are the same as those for the
+	### receiver.
+	def ==( other_schedule )
+		other_schedule.is_a?( self.class ) &&
+			self.periods.all? {|period| other_schedule.periods.include?(period) } &&
+			other_schedule.periods.all? {|period| self.periods.include?(period) }
+	end
+
+
+	### Return a new Schedulability::Schedule object that is the union of the receiver and
+	### +other_schedule+.
+	def |( other_schedule )
+		return self.class.new( self.periods + other_schedule.periods )
+	end
+	alias_method :+, :|
+
+
+	### Return a new Schedulability::Schedule object that is the intersection of the receiver and
+	### +other_schedule+.
+	def &( other_schedule )
+		new_periods = []
+
+		self.exploded_periods.product( other_schedule.exploded_periods ) do |p1, p2|
+			new_period = {}
+			common_scales = p1.keys & p2.keys
+
+			common_scales.each do |scale|
+				vals = p1[ scale ] & p2[ scale ]
+				new_period[ scale ] = Schedulability::Parser.coalesce_ranges( vals, scale )
+			end
+			next if new_period.values.any?( &:empty? )
+
+			(p1.keys - common_scales).each do |scale|
+				new_period[ scale ] = Schedulability::Parser.coalesce_ranges( p1[scale], scale )
+			end
+			(p2.keys - common_scales).each do |scale|
+				new_period[ scale ] = Schedulability::Parser.coalesce_ranges( p2[scale], scale )
+			end
+
+			new_periods << new_period
+		end
+
+		return self.class.new( *new_periods )
+	end
+
+
+	### Return the periods of the schedule exploded into integer arrays instead of Ranges.
+	def exploded_periods
+		return self.periods.map do |per|
+			per.each_with_object({}) do |(scale,ranges), hash|
+				hash[ scale ] = ranges.flat_map( &:to_a )
+			end
+		end
+	end
 
 
 	#######

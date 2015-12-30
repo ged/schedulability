@@ -46,6 +46,16 @@ describe Schedulability::Schedule do
 			expect( schedule ).to_not include( testing_time )
 		end
 
+
+		it "is equal to other empty schedules" do
+			expect( schedule ).to be == described_class.new
+		end
+
+
+		it "is not equal to any other non-empty schedules" do
+			expect( schedule ).to_not be == described_class.new( md: 10..10 )
+		end
+
 	end
 
 
@@ -73,6 +83,18 @@ describe Schedulability::Schedule do
 
 		it "doesn't include a time outside of its period" do
 			expect( schedule ).to_not include( 'Tue Dec 13 12:00:00 2015' )
+		end
+
+
+		it "is equal to another schedule with the same period" do
+			expect( schedule ).to be == described_class.parse( 'wd {Mon Tue Wed Thu Fri}' )
+		end
+
+
+		it "is not equal to another schedule if it doesn't have the same time periods" do
+			expect( schedule ).to_not be == described_class.parse( 'wd {Mon-Sat}' )
+			expect( schedule ).to_not be == described_class.parse( 'wd {Mon-Thu}' )
+			expect( schedule ).to_not be == described_class.parse( 'wd {Mon-Fri} hour {6am-8am}' )
 		end
 
 	end
@@ -131,7 +153,6 @@ describe Schedulability::Schedule do
 		end
 
 	end
-
 
 
 	describe "period parsing" do
@@ -556,6 +577,18 @@ describe Schedulability::Schedule do
 		end
 
 
+		it "matches negative year range values as multi-year inclusive ranges" do
+			pending "implementation"
+			schedule = described_class.parse( "! yr {2009-2015}" )
+
+			expect( schedule ).to include( '2008-12-31T23:59:59-00:00' )
+			expect( schedule ).to_not include( '2009-01-01T00:00:00-00:00' )
+			expect( schedule ).to_not include( '2011-06-15T00:00:00-00:00' )
+			expect( schedule ).to_not include( '2015-12-31T23:59:59-00:00' )
+			expect( schedule ).to include( '2016-01-01T00:00:00-00:00' )
+		end
+
+
 		it "raises an error for wrapped year ranges" do
 			expect {
 				described_class.parse( "yr {2015-2013}" )
@@ -662,17 +695,17 @@ describe Schedulability::Schedule do
 		end
 
 
-		it "raises a parse error for yday values greater than 366" do
+		it "raises a parse error for week values greater than 5" do
 			expect {
-				described_class.parse( 'yd {20 288 370}' )
-			}.to raise_error( Schedulability::ParseError, /invalid yday value: 370/i )
+				described_class.parse( 'wk {7}' )
+			}.to raise_error( Schedulability::ParseError, /invalid week value: 7/i )
 		end
 
 
-		it "raises a parse error for yday ranges with invalid values" do
+		it "raises a parse error for week ranges that have a value greater than 5" do
 			expect {
-				described_class.parse( 'yd {120-500}' )
-			}.to raise_error( Schedulability::ParseError, /invalid yday value: 500/i )
+				described_class.parse( 'wk {2-11}' )
+			}.to raise_error( Schedulability::ParseError, /invalid week value: 11/i )
 		end
 
 
@@ -681,6 +714,44 @@ describe Schedulability::Schedule do
 				described_class.parse("years {2001 2011 2021} months {Jul Sep}")
 			).to be_a( described_class )
 		end
+
+		it "ignores whitespace in range values" do
+			schedule = described_class.parse( "sec { 18 - 55   }" )
+			expect( schedule ).to be_a( described_class )
+		end
+
+	end
+
+
+	describe "mutators" do
+
+
+		it "can calculate the union of two schedules" do
+			schedule1 = described_class.parse( 'md {1-15}' )
+			schedule2 = described_class.parse( 'month {Feb-Jul}' )
+			schedule3 = schedule1 | schedule2
+
+			expect( schedule3 ).to be == described_class.parse( 'md {1-15}, month {Feb-Jul}' )
+		end
+
+
+		it "can calculate the intersection of two schedules" do
+			schedule1 = described_class.parse( 'md {1-15} month {Mar-Jun}' )
+			schedule2 = described_class.parse( 'md {10-20} month {Feb-Jul}' )
+			schedule3 = schedule1 & schedule2
+
+			expect( schedule3 ).to be == described_class.parse( 'md {10-15} month {Mar-Jun}' )
+		end
+
+
+		it "returns an empty schedule as the intersection of two non-overlapping schedules" do
+			schedule1 = described_class.parse( 'hr {6am-8am} wday {Mon Wed Fri}' )
+			schedule2 = described_class.parse( 'wday {Thu Sat}' )
+			schedule3 = schedule1 & schedule2
+
+			expect( schedule3 ).to be_empty
+		end
+
 
 	end
 
