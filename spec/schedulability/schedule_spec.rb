@@ -276,6 +276,20 @@ describe Schedulability::Schedule do
 		end
 
 
+		it "handles 12pm correctly" do
+			schedule = described_class.parse( "hr {12pm}" )
+			time = Time.iso8601( '2015-12-15T12:00:00-00:00' )
+
+			expect( schedule ).to_not include( time - 1 )
+			expect( schedule ).to include( time )
+			expect( schedule ).to include( time + 1.minute )
+			expect( schedule ).to include( time + 20.minutes )
+			expect( schedule ).to include( time + (1.hour - 1.minute) )
+			expect( schedule ).to_not include( time + 1.hour )
+			expect( schedule ).to_not include( time + 3.hours )
+		end
+
+
 		it "matches single day number values as a 86400-second exclusive range" do
 			schedule = described_class.parse( "md {11}" )
 
