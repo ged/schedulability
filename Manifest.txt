@@ -7,6 +7,7 @@ README.md
 Rakefile
 lib/schedulability.rb
 lib/schedulability/exceptions.rb
+lib/schedulability/mixins.rb
 lib/schedulability/schedule.rb
 spec/helpers.rb
 spec/schedulability/schedule_spec.rb

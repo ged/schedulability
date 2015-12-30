@@ -95,7 +95,7 @@ Values for week days can be abbreviated to two characters (`Wednesday` == `Wed` 
 <dd>The same thing (Winter) as a wrapped range.</dd>
 
 <dt><code>mo {jan feb nov dec}</code></dt>
-<dd>Nothern Winter as single months</dd>
+<dd>Northern Winter as single months</dd>
 
 <dt><code>mo {Jan Feb}, mo {Nov Dec}</code></dt>
 <dd>Also Northern Winter.</dd>

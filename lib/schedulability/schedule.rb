@@ -137,7 +137,7 @@ class Schedulability::Schedule
 
 	### Return an Array of week-of-month Integer Ranges for the specified +ranges+ expression.
 	def self::extract_week_ranges( ranges )
-		return self.extract_ranges( :month, ranges, 1, 6, false ) do |val|
+		return self.extract_ranges( :week, ranges, 1, 5, false ) do |val|
 			Integer( strip_leading_zeros(val) )
 		end
 	end
@@ -361,11 +361,7 @@ class Schedulability::Schedule
 		when :yd
 			return time.yday
 		when :wk
-			# :MAHLON:
-			# Count Sundays after the first of the month and add one; there's probably
-			# a more efficient way to do this, but this works for now.
-			second = Date.new( time.year, time.month, 2 )
-			return second.upto( time.to_date ).count( &:sunday? ) + 1
+			return ( time.day / 7.0 ).ceil
 		when :yr
 			self.log.debug "Year match: %p" % [ time.year ]
 			return time.year

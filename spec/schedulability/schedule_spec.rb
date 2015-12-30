@@ -317,40 +317,28 @@ describe Schedulability::Schedule do
 		end
 
 
-		it "matches single week number values against the week of the month" do
+		it "matches single week number values against the counted week of the month" do
 			schedule = described_class.parse( "wk {2}" )
 
 			expect( schedule ).to_not include( '2016-04-01T00:00:00-00:00' )
 			expect( schedule ).to_not include( '2016-04-02T00:00:00-00:00' )
 			expect( schedule ).to_not include( '2016-04-02T23:59:59-00:00' )
+			expect( schedule ).to_not include( '2016-04-03T00:00:00-00:00' )
+			expect( schedule ).to_not include( '2016-04-04T03:00:00-00:00' )
+			expect( schedule ).to_not include( '2016-04-05T06:00:00-00:00' )
+			expect( schedule ).to_not include( '2016-04-06T09:00:00-00:00' )
+			expect( schedule ).to_not include( '2016-04-07T23:59:59-00:00' )
 
-			expect( schedule ).to include( '2016-04-03T00:00:00-00:00' )
-			expect( schedule ).to include( '2016-04-04T03:00:00-00:00' )
-			expect( schedule ).to include( '2016-04-05T06:00:00-00:00' )
-			expect( schedule ).to include( '2016-04-06T09:00:00-00:00' )
-			expect( schedule ).to include( '2016-04-07T12:00:00-00:00' )
 			expect( schedule ).to include( '2016-04-08T15:00:00-00:00' )
 			expect( schedule ).to include( '2016-04-09T19:00:00-00:00' )
+			expect( schedule ).to include( '2016-04-10T00:00:00-00:00' )
+			expect( schedule ).to include( '2016-04-11T00:00:00-00:00' )
+			expect( schedule ).to include( '2016-04-12T00:00:00-00:00' )
+			expect( schedule ).to include( '2016-04-13T00:00:00-00:00' )
+			expect( schedule ).to include( '2016-04-14T23:59:59-00:00' )
 
-			expect( schedule ).to_not include( '2016-04-10T00:00:00-00:00' )
 			expect( schedule ).to_not include( '2016-04-15T00:00:00-00:00' )
 			expect( schedule ).to_not include( '2016-04-28T00:00:00-00:00' )
-		end
-
-
-		it "matches week numbers correctly for months that begin on Sunday" do
-			schedule = described_class.parse( "wk {2}" )
-
-			expect( schedule ).to_not include( '2016-05-01T00:00:00-00:00' )
-			expect( schedule ).to_not include( '2016-05-02T00:00:00-00:00' )
-			expect( schedule ).to_not include( '2016-05-07T23:59:59-00:00' )
-
-			expect( schedule ).to include( '2016-05-08T00:00:00-00:00' )
-			expect( schedule ).to include( '2016-05-14T23:59:59-00:00' )
-
-			expect( schedule ).to_not include( '2016-05-15T00:00:00-00:00' )
-			expect( schedule ).to_not include( '2016-05-20T00:00:00-00:00' )
-			expect( schedule ).to_not include( '2016-05-28T00:00:00-00:00' )
 		end
 
 
@@ -359,15 +347,14 @@ describe Schedulability::Schedule do
 
 			expect( schedule ).to_not include( '2016-04-01T00:00:00-00:00' )
 			expect( schedule ).to_not include( '2016-04-02T00:00:00-00:00' )
-			expect( schedule ).to_not include( '2016-04-02T23:59:59-00:00' )
+			expect( schedule ).to_not include( '2016-04-07T23:59:59-00:00' )
 
-			expect( schedule ).to include( '2016-04-03T00:00:00-00:00' )
+			expect( schedule ).to include( '2016-04-08T00:00:00-00:00' )
 			expect( schedule ).to include( '2016-04-10T00:00:00-00:00' )
 			expect( schedule ).to include( '2016-04-17T00:00:00-00:00' )
-			expect( schedule ).to include( '2016-04-23T23:59:59-00:00' )
+			expect( schedule ).to include( '2016-04-28T23:59:59-00:00' )
 
-			expect( schedule ).to_not include( '2016-04-24T00:00:00-00:00' )
-			expect( schedule ).to_not include( '2016-04-28T00:00:00-00:00' )
+			expect( schedule ).to_not include( '2016-04-29T00:00:00-00:00' )
 			expect( schedule ).to_not include( '2016-04-30T00:00:00-00:00' )
 		end
 
@@ -377,16 +364,15 @@ describe Schedulability::Schedule do
 
 			expect( schedule ).to include( '2016-04-01T00:00:00-00:00' )
 			expect( schedule ).to include( '2016-04-02T00:00:00-00:00' )
-			expect( schedule ).to include( '2016-04-02T23:59:59-00:00' )
+			expect( schedule ).to include( '2016-04-07T23:59:59-00:00' )
 
-			expect( schedule ).to_not include( '2016-04-03T00:00:00-00:00' )
+			expect( schedule ).to_not include( '2016-04-08T00:00:00-00:00' )
 			expect( schedule ).to_not include( '2016-04-10T00:00:00-00:00' )
-			expect( schedule ).to_not include( '2016-04-16T23:59:59-00:00' )
+			expect( schedule ).to_not include( '2016-04-20T23:59:59-00:00' )
 
-			expect( schedule ).to include( '2016-04-17T00:00:00-00:00' )
-			expect( schedule ).to include( '2016-04-23T00:00:00-00:00' )
 			expect( schedule ).to include( '2016-04-28T00:00:00-00:00' )
-			expect( schedule ).to include( '2016-04-30T00:00:00-00:00' )
+			expect( schedule ).to include( '2016-04-29T00:00:00-00:00' )
+			expect( schedule ).to include( '2016-04-30T23:59:59-00:00' )
 		end
 
 
