@@ -35,15 +35,15 @@ describe Schedulability::Schedule do
 		end
 
 
-		it "is never 'now'" do
+		it "is always 'now'" do
 			Timecop.freeze( testing_time ) do
-				expect( schedule ).to_not be_now
+				expect( schedule ).to be_now
 			end
 		end
 
 
-		it "never includes a particular time" do
-			expect( schedule ).to_not include( testing_time )
+		it "includes every time" do
+			expect( schedule ).to include( testing_time )
 		end
 
 
@@ -121,6 +121,7 @@ describe Schedulability::Schedule do
 			expect( schedule ).to include( 'Tue Dec 15 12:00:00 2015' )
 		end
 
+
 		it "doesn't include a time outside of its period" do
 			expect( schedule ).to_not include( 'Tue Dec 15 17:00:00 2015' )
 		end
@@ -152,6 +153,14 @@ describe Schedulability::Schedule do
 			expect( schedule ).to_not include( 'Sat Dec 19 12:00:00 2015' )
 		end
 
+
+		it "respects negations" do
+			schedule = described_class.
+				parse( "wd {Mon Wed Fri} hr {8am-4pm}, wd {Tue Thu} hr {9am-5pm}, not hour { 3pm }" )
+			expect( schedule ).to include( 'Tue Dec 15 12:00:00 2015' )
+			expect( schedule ).to include( 'Wed Dec 16 12:00:00 2015' )
+			expect( schedule ).to_not include( 'Wed Dec 16 15:05:00 2015' )
+		end
 	end
 
 
@@ -166,6 +175,18 @@ describe Schedulability::Schedule do
 			expect( schedule ).to include( time )
 			expect( schedule ).to_not include( time + 1.second )
 			expect( schedule ).to_not include( time + 2.seconds )
+		end
+
+
+		it "matches negated single second values during every other second of every minute" do
+			schedule = described_class.parse( "except sec {18}" )
+			time = Time.iso8601( '2015-12-15T12:00:18-00:00' )
+
+			expect( schedule ).to include( time - 2.seconds )
+			expect( schedule ).to include( time - 1.second )
+			expect( schedule ).to_not include( time )
+			expect( schedule ).to include( time + 1.second )
+			expect( schedule ).to include( time + 2.seconds )
 		end
 
 
@@ -493,6 +514,17 @@ describe Schedulability::Schedule do
 		end
 
 
+		it "matches every month other than those in a negated range of month names" do
+			schedule = described_class.parse( "not mo {Aug-Nov}" )
+
+			expect( schedule ).to include( 'Fri, 31 Jul 2015 23:59:59 GMT' )
+			expect( schedule ).to_not include( 'Sat, 01 Aug 2015 00:00:00 GMT' )
+			expect( schedule ).to_not include( 'Thu, 15 Oct 2015 00:00:00 GMT' )
+			expect( schedule ).to_not include( 'Mon, 30 Nov 2015 23:59:59 GMT' )
+			expect( schedule ).to include( 'Tue, 01 Dec 2015 00:00:00 GMT' )
+		end
+
+
 		it "matches a wrapped range of month name values as two inclusive ranges" do
 			schedule = described_class.parse( "mo {Sep-Mar}" )
 
@@ -578,7 +610,6 @@ describe Schedulability::Schedule do
 
 
 		it "matches negative year range values as multi-year inclusive ranges" do
-			pending "implementation"
 			schedule = described_class.parse( "! yr {2009-2015}" )
 
 			expect( schedule ).to include( '2008-12-31T23:59:59-00:00' )
@@ -752,6 +783,44 @@ describe Schedulability::Schedule do
 			expect( schedule3 ).to be_empty
 		end
 
+
+		it "can calculate unions of schedules with negated periods" do
+			schedule1 = described_class.parse( '! wday { Mon-Fri }' )
+			schedule2 = described_class.parse( '! wday { Thu }' )
+			schedule3 = schedule1 | schedule2
+
+			expect( schedule3 ).to be == schedule2
+		end
+
+
+		it "can calculate unions of schedules with negated periods that don't overlap" do
+			schedule1 = described_class.parse( '! wday { Wed }' )
+			schedule2 = described_class.parse( '! wday { Thu }' )
+			schedule3 = schedule1 | schedule2
+
+			expect( schedule3 ).to be_empty
+		end
+
+
+		it "can calculate intersections of schedules with negated periods" do
+			schedule1 = described_class.parse( '! wday { Wed }' )
+			schedule2 = described_class.parse( '! wday { Thu }' )
+			schedule3 = schedule1 & schedule2
+
+			expect( schedule3 ).to be == described_class.parse( '! wday {Wed}, ! wday {Thu}' )
+		end
+
+
+		it "can calculate the inverse of a schedule" do
+			schedule1 = described_class.parse( 'hr {8am-4pm} md {10-15}' )
+			schedule2 = ~schedule1
+
+			expect( schedule2 ).to include( '2015-01-09T08:00:00-00:00' )
+			expect( schedule2 ).to include( '2015-01-10T07:59:59-00:00' )
+			expect( schedule2 ).to_not include( '2015-01-10T08:00:00-00:00' )
+			expect( schedule2 ).to_not include( '2015-01-15T15:59:59-00:00' )
+			expect( schedule2 ).to include( '2015-01-15T16:00:00-00:00' )
+		end
 
 	end
 

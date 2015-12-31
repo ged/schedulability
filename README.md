@@ -25,14 +25,14 @@ Schedules are represented with Schedulability::Schedule objects, which are empty
     schedule = Schedulability::Schedule.new
     # => #<Schedulability::Schedule:0x007ffcf2b982b8 (empty)>
 
-An empty Schedule has no time scheduled, and will never match any time.
+An empty Schedule has no time restrictions, and will match any time.
 
 To specify matching times, you'll need to construct a Schedule with one or more periods.
 
 
 ### Periods
 
-A schedule is specified as a String that contains a comma-separated list of period descriptions. The string `"never"` or a `nil` can be specified to explicitly create an empty schedule.
+A schedule is specified as a String that contains a comma-separated list of period descriptions. The string `"never"` can be specified to explicitly create a schedule which will not match any time.
 
 A period description is of the form
 

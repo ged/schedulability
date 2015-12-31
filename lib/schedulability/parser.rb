@@ -58,9 +58,20 @@ module Schedulability::Parser
 
 	### Scan +expression+ for periods and return them in an Array.
 	def extract_periods( expression )
-		return expression.strip.downcase.split( /\s*,\s*/ ).map do |subexpr|
-			self.extract_period( subexpr )
+		positive_periods = []
+		negative_periods = []
+
+		expression.strip.downcase.split( /\s*,\s*/ ).each do |subexpr|
+			hash, negative = self.extract_period( subexpr )
+			if negative
+				self.log.debug "Adding %p to the negative "
+				negative_periods << hash
+			else
+				positive_periods << hash
+			end
 		end
+
+		return positive_periods, negative_periods
 	end
 
 
@@ -68,6 +79,9 @@ module Schedulability::Parser
 	def extract_period( expression )
 		hash = {}
 		scanner = StringScanner.new( expression )
+
+		negative = scanner.skip( /\s*(!|not |except )\s*/ )
+		self.log.debug "Period %p is %snegative!" % [ expression, negative ? "" : "not " ]
 
 		while scanner.scan( PERIOD_PATTERN )
 			ranges = scanner[:ranges].strip
@@ -103,7 +117,7 @@ module Schedulability::Parser
 				"malformed schedule (at %d: %p)" % [ scanner.pos, scanner.rest ]
 		end
 
-		return hash
+		return hash, negative
 	ensure
 		scanner.terminate if scanner
 	end
