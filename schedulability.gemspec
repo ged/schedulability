@@ -1,20 +1,21 @@
 # -*- encoding: utf-8 -*-
-# stub: schedulability 0.12.0.pre20151228151433 ruby lib
+# stub: schedulability 0.2.0.pre20151230170838 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "schedulability"
-  s.version = "0.12.0.pre20151228151433"
+  s.version = "0.2.0.pre20151230170838"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Michael Granger", "Mahlon E. Smith"]
-  s.date = "2015-12-28"
+  s.cert_chain = ["/Users/ged/.gem/gem-public_cert.pem"]
+  s.date = "2015-12-31"
   s.description = "Schedulability is a library for describing scheduled time. You can specify one or more periods of time using a simple syntax, then combine them to describe more-complex schedules."
   s.email = ["ged@FaerieMUD.org", "mahlon@martini.nu"]
   s.extra_rdoc_files = ["History.md", "Manifest.txt", "README.md", "History.md", "README.md"]
-  s.files = [".editorconfig", ".simplecov", "ChangeLog", "History.md", "Manifest.txt", "README.md", "Rakefile", "lib/schedulability.rb", "lib/schedulability/exceptions.rb", "lib/schedulability/schedule.rb", "spec/helpers.rb", "spec/schedulability/schedule_spec.rb", "spec/schedulability_spec.rb"]
-  s.homepage = "home"
-  s.licenses = ["BSD"]
+  s.files = [".editorconfig", ".simplecov", "ChangeLog", "History.md", "Manifest.txt", "README.md", "Rakefile", "lib/schedulability.rb", "lib/schedulability/exceptions.rb", "lib/schedulability/mixins.rb", "lib/schedulability/parser.rb", "lib/schedulability/schedule.rb", "spec/helpers.rb", "spec/schedulability/schedule_spec.rb", "spec/schedulability_spec.rb"]
+  s.homepage = "http://deveiate.org/projects/schedulability"
+  s.licenses = ["BSD-3-Clause"]
   s.rdoc_options = ["--main", "README.md"]
   s.required_ruby_version = Gem::Requirement.new(">= 2.2.0")
   s.rubygems_version = "2.5.1"

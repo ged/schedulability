@@ -20,6 +20,12 @@ hoespec = Hoe.spec 'schedulability' do
 	self.readme_file = 'README.md'
 	self.history_file = 'History.md'
 	self.extra_rdoc_files = FileList[ '*.md' ]
+	self.urls = {
+		home:   'http://deveiate.org/projects/schedulability',
+		code:   'http://bitbucket.org/ged/schedulability',
+		docs:   'http://deveiate.org/code/schedulability',
+		github: 'http://github.com/ged/schedulability',
+	}
 
 	self.developer 'Michael Granger', 'ged@FaerieMUD.org'
 	self.developer 'Mahlon E. Smith', 'mahlon@martini.nu'
@@ -31,7 +37,7 @@ hoespec = Hoe.spec 'schedulability' do
 	self.dependency 'hoe-bundler',     '~> 1.2', :developer
 	self.dependency 'simplecov',       '~> 0.7', :developer
 
-	self.license "BSD"
+	self.license "BSD-3-Clause"
 	self.require_ruby_version( '>=2.2.0' )
 	self.hg_sign_tags = true if self.respond_to?( :hg_sign_tags= )
 	self.check_history_on_release = true if self.respond_to?( :check_history_on_release= )
