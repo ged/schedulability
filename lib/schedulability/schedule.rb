@@ -118,7 +118,7 @@ class Schedulability::Schedule
 	end
 
 
-	###  Return a new Schedulability::Schedule object that inverts the positive and negative
+	### Return a new Schedulability::Schedule object that inverts the positive and negative
 	### period criteria.
 	def ~@
 		return self.class.new( self.negative_periods, self.positive_periods )
