@@ -187,7 +187,7 @@ module Schedulability::Parser
 
 	### Return an Array of Integer minute Ranges for the specified +ranges+ expression.
 	def extract_minute_ranges( ranges )
-		return self.extract_ranges( :minute, ranges, 0, 59 ) do |val|
+		return self.extract_ranges( :minute, ranges, 0, 60 ) do |val|
 			Integer( strip_leading_zeros(val) )
 		end
 	end
@@ -195,7 +195,7 @@ module Schedulability::Parser
 
 	### Return an Array of Integer second Ranges for the specified +ranges+ expression.
 	def extract_second_ranges( ranges )
-		return self.extract_ranges( :second, ranges, 0, 59 ) do |val|
+		return self.extract_ranges( :second, ranges, 0, 60 ) do |val|
 			Integer( strip_leading_zeros(val) )
 		end
 	end
@@ -302,8 +302,10 @@ module Schedulability::Parser
 
 
 	### Return a copy of the specified +val+ with any leading zeros stripped.
+	### If the resulting string is empty, return "0".
 	def strip_leading_zeros( val )
-		return val.sub( /\A0+/, '' )
+		without_leading_zeros = val.sub( /\A0+/, '' )
+		without_leading_zeros.empty? ? '0' : without_leading_zeros
 	end
 
 end # module Schedulability::Parser
