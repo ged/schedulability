@@ -15,28 +15,41 @@ github
 
 ## Description
 
-Schedulability is a library for describing scheduled time. You can specify one or more periods of time using a simple syntax, then combine them to describe more-complex schedules.
+Schedulability is a library for describing scheduled time. You can specify one
+or more periods of time using a simple syntax, then combine them to describe
+more-complex schedules.
 
 
 ## Usage
 
-Schedules are represented with Schedulability::Schedule objects, which are empty by default:
+Schedules are represented with Schedulability::Schedule objects, which are
+empty by default:
 
     schedule = Schedulability::Schedule.new
     # => #<Schedulability::Schedule:0x007ffcf2b982b8 (empty)>
 
 An empty Schedule has no time restrictions, and will match any time.
 
-To specify matching times, you'll need to construct a Schedule with one or more periods.
+To specify matching times, you'll need to construct a Schedule with one or more
+periods.
 
 
 ### Periods
 
-A schedule is specified as a String that contains a comma-separated list of period descriptions. The string `"never"` can be specified to explicitly create a schedule which will not match any time.
+A schedule is made up of zero or more positive periods, and zero or more
+negative periods. A time is within the schedule if at least one positive period
+and no negative periods match it.
+
+Periods are specified as a String that contains a comma-separated list of
+period descriptions. The string `"never"` can be specified to explicitly create
+a schedule which will not match any time.
 
 A period description is of the form
 
-    scale {range [range ...]} [scale {range [range ...]}]
+    [!] scale {range [range ...]} [scale {range [range ...]}]
+
+Negative periods begin with a `!`; you may also use `not` or `except` for
+readability.
 
 Scale must be one of nine different scales (or their equivalent codes):
 
@@ -54,25 +67,39 @@ Scale must be one of nine different scales (or their equivalent codes):
     minute |  min  | 0-59
     second |  sec  | 0-59
 
-The same scale type may be specified multiple times. Additional scales are unioned with the ranges defined by previous scales of the same type in the same sub-period.
+The same scale type may be specified multiple times. Additional scales are
+unioned with the ranges defined by previous scales of the same type in the same
+sub-period.
 
-A `range` is an exclusive Time range in the form:
+A `range` is specified in the form:
 
-    t
+    <range value>
 or
 
-    t1-t2
+    <range value>-<range value>
 
-For two-value ranges, the range is defined as the period between `t1` and `t2`. Scales which are in
-seconds granularity are exclusive of their end value, but the rest are inclusive. For example, `hr {9am-5pm}` means 9:00:00 AM until 4:59:59 PM, but `wd {Wed-Sat}` runs until one second before midnight on Saturday.
+For two-value ranges, the range is defined as the period between the first and
+second `range value`s. Scales which are in seconds granularity are exclusive of
+their end value, but the rest are inclusive. For example, `hr {9am-5pm}` means
+9:00:00 AM until 4:59:59 PM, but `wd {Wed-Sat}` runs until one second before
+midnight on Saturday.
 
-If the first value is larger than the second value (e.g. `min {20-10}`), the range wraps (except when the scale specification is `year`). For example, `month {9-2}` is the same as specifying `month {1-2 9-12}` or `month {1-2} month {9-12}` or even `month {Jan-Feb Sep-Dec}`.
+If the first value is larger than the second value (e.g. `min {20-10}`), the
+range wraps (except when the scale specification is `year`). For example,
+`month {9-2}` is the same as specifying `month {1-2 9-12}` or `month {1-2}
+month {9-12}` or even `month {Jan-Feb Sep-Dec}`.
 
-The range specified by the single-value specification is implicitly between the value of `t` and its next sequential whole value. For example, `hr {9}` is the same as specifying `hr {9-10}`, `mday {15}` is the same as `mday {15-16}`, etc.
+The range specified by the single-value specification is implicitly between the
+`range value` and its next sequential whole value. For example, `hr {9}` is the
+same as specifying `hr {9-10}`, `mday {15}` is the same as `mday {15-16}`, etc.
 
-Neither extra whitespace or case are significant in a period description. Scales must be specified either in long form (`year`, `month`, `week`, etc.) or in code form (`yr`, `mo`, `wk`, etc.). Scale forms may be mixed in a period statement.
+Neither extra whitespace nor case are significant in a period description.
+Scales must be specified either in long form (`year`, `month`, `week`, etc.) or
+in code form (`yr`, `mo`, `wk`, etc.). Scale forms may be mixed in a period
+statement.
 
-Values for week days can be abbreviated to two characters (`Wednesday` == `Wed` == `we`), and months can be abbreviated to three (`September` == `Sep`).
+Values for week days and months can be abbreviated to three characters
+(`Wednesday` == `Wed`, `September` == `Sep`).
 
 
 #### Period Examples
@@ -82,8 +109,8 @@ Values for week days can be abbreviated to two characters (`Wednesday` == `Wed` 
 <dd>Monday through Friday, 9am to 5pm</dd>
 
 <dt><code>wd {Mon Wed Fri} hr {9am-4pm}, wd{Tue Thu} hr {9am-2pm}</code></dt>
-<dd>Monday through Friday, 9:00:00am to 3:59:59pm on Monday, Wednesday, and Friday, 
-  and 9:00:00am to 1:59:59pm on Tuesday and Thursday</dd>
+<dd>Monday through Friday, 9:00:00am to 3:59:59pm on Monday, Wednesday, and 
+	Friday, and 9:00:00am to 1:59:59pm on Tuesday and Thursday</dd>
 
 <dt><code>wk {1 3 5} wd {Mon-Fri} hr {9am-5pm}</code></dt>
 <dd>Mon-Fri 9:00:00am-4:59:59pm, on odd weeks in the month</dd>
@@ -93,6 +120,9 @@ Values for week days can be abbreviated to two characters (`Wednesday` == `Wed` 
 
 <dt><code>mo {Nov-Feb}</code></dt>
 <dd>The same thing (Winter) as a wrapped range.</dd>
+
+<dt><code>not mo {Mar-Oct}</code></dt>
+<dd>The same thing (Winter) as a negative range.</dd>
 
 <dt><code>mo {jan feb nov dec}</code></dt>
 <dd>Northern Winter as single months</dd>
@@ -106,11 +136,15 @@ Values for week days can be abbreviated to two characters (`Wednesday` == `Wed` 
 <dt><code>minute { 0-29 }</code></dt>
 <dd>The first half of every hour.</dd>
 
-<dt><code>hour { 12am-12pm }</code></dt>
+<dt><code>hour { 12am - 12pm }</code></dt>
 <dd>During the morning.</dd>
 
 <dt><code>sec {0-4 10-14 20-24 30-34 40-44 50-54}</code></dt>
 <dd>Alternating 5-second periods every hour.</dd>
+
+<dt><code>wd {mon wed fri} hr {8am - 5pm}, except day {1}</code></dt>
+<dd>Every Monday, Wednesday, and Friday from 8am until 4:59:59 PM, except on 
+	the first of the month.</dd>
 
 <dt><code>wd {1 3 5 7} min {0-29}, wd {2 4 6} min {30-59}</code></dt>
 <dd>Every first half-hour on alternating week days, and the second half-hour the
@@ -121,8 +155,8 @@ Values for week days can be abbreviated to two characters (`Wednesday` == `Wed` 
 ### Schedule Objects
 
 Schedules are immutable after they're created, but they have mutator methods to
-allow you to compose the schedule you want by combining them, or by using mutator
-methods that return a changed copy of the original:
+allow you to compose the schedule you want by combining them, or by using
+mutator methods that return a changed copy of the original:
 
     weekend = Schedulability::Schedule( "wd {Sat - Sun}" )
     weekdays = Schedulability::Schedule( "wd {Mon - Fri}" )
@@ -159,14 +193,6 @@ methods that return a changed copy of the original:
         send_email( "Stuff happened." )
     end
 
-	### Enumerators
-	on_duty.each_minute
-	# => #<Enumerator: ...>
-	on_duty.each_hour
-	# => #<Enumerator: ...>
-	on_duty.each_day
-	# => #<Enumerator: ...>
-
 
 ## Prerequisites
 
@@ -194,14 +220,16 @@ and generate the API documentation.
 
 ## License
 
-This library borrows much of its schedule description syntax and several implementation strategies from the Time::Period Perl module by Patrick Ryan, used under the terms of the Perl Artistic License.
+This library borrows much of its schedule description syntax and several
+implementation strategies from the Time::Period Perl module by Patrick Ryan,
+used under the terms of the Perl Artistic License.
 
-  Patrick Ryan <perl@pryan.org> wrote it.
-  Paul Boyd <pboyd@cpan.org> fixed a few bugs.
-
-  Copyright (c) 1997 Patrick Ryan. All rights reserved. This Perl 
-  module uses the conditions given by Perl. This module may only
-  be distributed and or modified under the conditions given by Perl.
+> Patrick Ryan <perl@pryan.org> wrote it.
+> Paul Boyd <pboyd@cpan.org> fixed a few bugs.
+> 
+> Copyright (c) 1997 Patrick Ryan. All rights reserved. This Perl 
+> module uses the conditions given by Perl. This module may only
+> be distributed and or modified under the conditions given by Perl.
 
 The rest is:
 

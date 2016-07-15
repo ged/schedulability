@@ -46,7 +46,7 @@ class Schedulability::Schedule
 
 	### Returns +true+ if the schedule doesn't have any time periods.
 	def empty?
-		return self.positive_periods.empty?
+		return self.positive_periods.empty? && self.negative_periods.empty?
 	end
 
 
@@ -84,6 +84,22 @@ class Schedulability::Schedule
 	 def negative_periods_include?( time )
 		return find_matching_period_for( time, self.negative_periods )
 	end
+
+
+	### Returns +true+ if the schedule has any times which overlap those of +other_schedule+.
+	def overlaps?( other_schedule )
+		return ! self.exclusive?( other_schedule )
+	end
+	alias_method :overlaps_with?, :overlaps?
+
+
+	### Returns +true+ if the schedule does not have any times which overlap those
+	### of +other_schedule+.
+	def exclusive?( other_schedule )
+		return ( self & other_schedule ).empty?
+	end
+	alias_method :exclusive_of?, :exclusive?
+	alias_method :is_exclusive_of?, :exclusive?
 
 
 	### Returns +true+ if the time periods for +other_schedule+ are the same as those for the

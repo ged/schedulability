@@ -67,7 +67,7 @@ if File.directory?( '.hg' )
 	RDoc::Task.new( 'docs' ) do |rdoc|
 	    rdoc.main = "README.md"
 	    rdoc.rdoc_files.include( "*.rdoc", "*.md", "ChangeLog", "lib/**/*.rb" )
-	    rdoc.generator = :sixfish
+	    rdoc.generator = :fivefish
 		rdoc.title = 'Schedulability'
 	    rdoc.rdoc_dir = 'doc'
 	end

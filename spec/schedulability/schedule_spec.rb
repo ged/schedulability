@@ -25,6 +25,13 @@ describe Schedulability::Schedule do
 	let( :testing_time ) { Time.iso8601('2015-12-15T12:00:00-00:00') }
 
 
+	RSpec::Matchers.define( :overlap ) do |other|
+		match do |schedule|
+			schedule.overlaps?( other )
+		end
+	end
+
+
 	context "with no periods" do
 
 		let( :schedule ) { described_class.new }
@@ -836,6 +843,32 @@ describe Schedulability::Schedule do
 			expect( schedule2 ).to_not include( '2015-01-10T08:00:00-00:00' )
 			expect( schedule2 ).to_not include( '2015-01-15T15:59:59-00:00' )
 			expect( schedule2 ).to include( '2015-01-15T16:00:00-00:00' )
+		end
+
+	end
+
+
+	describe "predicates" do
+
+		it "can test if one schedule overlaps another" do
+			schedule1 = described_class.parse( "hr {8am - 5pm}" )
+			schedule2 = described_class.parse( "hr {5pm - 8am}" )
+			schedule3 = described_class.parse( "wd {Mon - Fri}" )
+
+			expect( schedule1 ).to_not overlap( schedule2 )
+			expect( schedule1 ).to overlap( schedule3 )
+			expect( schedule2 ).to overlap( schedule3 )
+		end
+
+
+		it "can test if one schedule is exclusive of another" do
+			schedule1 = described_class.parse( "hr {8am - 5pm}" )
+			schedule2 = described_class.parse( "hr {5pm - 8am}" )
+			schedule3 = described_class.parse( "wd {Mon - Fri}" )
+
+			expect( schedule1 ).to be_exclusive_of( schedule2 )
+			expect( schedule1 ).to_not be_exclusive_of( schedule3 )
+			expect( schedule2 ).to_not be_exclusive_of( schedule3 )
 		end
 
 	end
