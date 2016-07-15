@@ -723,6 +723,32 @@ describe Schedulability::Schedule do
 		end
 
 
+		it "doesn't raise a parse error for second values equal to 59" do
+			expect {
+				described_class.parse( 'sec {1 5 10 59}' )
+			}.not_to raise_error
+			expect {
+				described_class.parse( 'sec {59}' )
+			}.not_to raise_error
+			expect {
+				described_class.parse( 'sec {0-59}' )
+			}.not_to raise_error
+		end
+
+
+		it "allows second values equal to 0" do
+			expect {
+				described_class.parse( 'sec {0 5 10 59}' )
+			}.not_to raise_error
+			expect {
+				described_class.parse( 'sec {0}' )
+			}.not_to raise_error
+			expect {
+				described_class.parse( 'sec {0-59}' )
+			}.not_to raise_error
+		end
+
+
 		it "raises a parse error for minute values greater than 59" do
 			expect {
 				described_class.parse( 'min {09 28 68}' )
@@ -730,6 +756,32 @@ describe Schedulability::Schedule do
 			expect {
 				described_class.parse( 'min {60}' )
 			}.to raise_error( Schedulability::ParseError, /invalid minute value: 60/i )
+		end
+
+
+		it "doesn't raise a parse error for minute values equal to 59" do
+			expect {
+				described_class.parse( 'min {1 5 10 59}' )
+			}.not_to raise_error
+			expect {
+				described_class.parse( 'min {59}' )
+			}.not_to raise_error
+			expect {
+				described_class.parse( 'min {0-59}' )
+			}.not_to raise_error
+		end
+
+
+		it "allows minute values equal to 0" do
+			expect {
+				described_class.parse( 'min {0 5 10 59}' )
+			}.not_to raise_error
+			expect {
+				described_class.parse( 'min {0}' )
+			}.not_to raise_error
+			expect {
+				described_class.parse( 'min {0-59}' )
+			}.not_to raise_error
 		end
 
 
