@@ -125,6 +125,17 @@ class Schedulability::Schedule
 	end
 
 
+	### Return a string from previously parsed Schedule period objects.
+	def to_s
+		str = Schedulability::Parser.stringify( self.positive_periods )
+		unless self.negative_periods.empty?
+			str << ", not %s" % [ Schedulability::Parser.stringify(self.negative_periods) ]
+		end
+
+		return str
+	end
+
+
 	#######
 	private
 	#######

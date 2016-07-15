@@ -56,6 +56,35 @@ module Schedulability::Parser
 	module_function
 	###############
 
+	### Normalize an array of parsed periods into a human readable string.
+	def stringify( periods )
+		strings = []
+		periods.each do |period|
+			period_string = []
+			period.sort_by{|k, v| k}.each do |scale, ranges|
+				range_string = ""
+				range_string << "%s { " % [ scale.to_s ]
+
+				range_strings = ranges.each_with_object( [] ).each do |range, acc|
+					if range.min == range.max
+						acc << range.min
+					elsif range.exclude_end?
+						acc << "%d-%d" % [ range.min, range.max + 1 ]
+					else
+						acc << "%d-%d" % [ range.min, range.max ]
+					end
+				end
+
+				range_string << range_strings.join( ' ' ) << " }"
+				period_string << range_string
+			end
+			strings << period_string.join( ' ' )
+		end
+
+		return strings.join( ', ' )
+	end
+
+
 	### Scan +expression+ for periods and return them in an Array.
 	def extract_periods( expression )
 		positive_periods = []
@@ -228,10 +257,13 @@ module Schedulability::Parser
 	### +index_arrays+ for non-numeric values. Construct the Ranges with the given
 	### +minval+/+maxval+ range boundaries.
 	def extract_ranges( scale, ranges, minval, maxval )
+		self.log.debug "Extracting range using %p scale: %p (min: %p, max: %p)" %
+			[ scale, ranges, minval, maxval ]
 		exclude_end = EXCLUSIVE_RANGED_SCALES.include?( scale )
 		valid_range = Range.new( minval, maxval, exclude_end )
 
 		ints = ranges.split( /(?<!-)\s+(?!-)/ ).flat_map do |range|
+			self.log.debug "Raw range: %p" % [ range ]
 			min, max = range.split( /\s*-\s*/, 2 )
 			self.log.debug "Min = %p, max = %p" % [ min, max ]
 
@@ -303,7 +335,8 @@ module Schedulability::Parser
 
 	### Return a copy of the specified +val+ with any leading zeros stripped.
 	def strip_leading_zeros( val )
-		return val.sub( /\A0+/, '' )
+		return val.sub( /\A0+(?!$)/, '' )
 	end
 
 end # module Schedulability::Parser
+

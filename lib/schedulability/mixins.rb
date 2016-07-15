@@ -120,6 +120,81 @@ module Schedulability
 			end
 
 		end # refine Numeric
+
+
+		refine Time do
+
+			# Approximate Time Constants (in seconds)
+			MINUTES = 60
+			HOURS   = 60  * MINUTES
+			DAYS    = 24  * HOURS
+			WEEKS   = 7   * DAYS
+			MONTHS  = 30  * DAYS
+			YEARS   = 365.25 * DAYS
+
+
+			### Returns +true+ if the receiver is a Time in the future.
+			def future?
+				return self > Time.now
+			end
+
+
+			### Returns +true+ if the receiver is a Time in the past.
+			def past?
+				return self < Time.now
+			end
+
+
+			### Return a description of the receiving Time object in relation to the current
+			### time.
+			###
+			### Example:
+			###
+			###    "Saved %s ago." % object.updated_at.as_delta
+			def as_delta
+				now = Time.now
+				if now > self
+					seconds = now - self
+					return "%s ago" % [ timeperiod(seconds) ]
+				else
+					seconds = self - now
+					return "%s from now" % [ timeperiod(seconds) ]
+				end
+			end
+
+
+			### Return a description of +seconds+ as the nearest whole unit of time.
+			def timeperiod( seconds )
+				return case
+					when seconds < MINUTES - 5
+						'less than a minute'
+					when seconds < 50 * MINUTES
+						if seconds <= 89
+							"a minute"
+						else
+							"%d minutes" % [ (seconds.to_f / MINUTES).ceil ]
+						end
+					when seconds < 90 * MINUTES
+						'about an hour'
+					when seconds < 18 * HOURS
+						"%d hours" % [ (seconds.to_f / HOURS).ceil ]
+					when seconds < 30 * HOURS
+						'about a day'
+					when seconds < WEEKS
+						"%d days" % [ (seconds.to_f / DAYS).ceil ]
+					when seconds < 2 * WEEKS
+						'about a week'
+					when seconds < 3 * MONTHS
+						"%d weeks" % [ (seconds.to_f / WEEKS).round ]
+					when seconds < 18 * MONTHS
+						"%d months" % [ (seconds.to_f / MONTHS).ceil ]
+					else
+						"%d years" % [ (seconds.to_f / YEARS).ceil ]
+					end
+			end
+
+		end # refine Time
+
 	end # module TimeRefinements
 
 end # module Schedulability

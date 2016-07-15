@@ -24,5 +24,9 @@ module Schedulability
 	autoload :Parser, 'schedulability/parser'
 	autoload :TimeRefinements, 'schedulability/mixins'
 
+	autoload :Error, 'schedulability/exceptions'
+	autoload :ParseError, 'schedulability/exceptions'
+	autoload :RangeError, 'schedulability/exceptions'
+
 end # module Schedulability
 

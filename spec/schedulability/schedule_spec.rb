@@ -161,6 +161,13 @@ describe Schedulability::Schedule do
 			expect( schedule ).to include( 'Wed Dec 16 12:00:00 2015' )
 			expect( schedule ).to_not include( 'Wed Dec 16 15:05:00 2015' )
 		end
+
+
+		it "can be stringified" do
+			schedule = described_class.
+				parse( "wd {Mon Wed Fri} hr {8am-4pm}, wd {Tue Thu} hr {9am-5pm}, not hour { 3pm }" )
+			expect( schedule.to_s ).to eq( "hr { 8-16 } wd { 1 3 5 }, hr { 9-17 } wd { 2 4 }, not hr { 15 }" )
+		end
 	end
 
 
@@ -781,6 +788,15 @@ describe Schedulability::Schedule do
 			schedule3 = schedule1 & schedule2
 
 			expect( schedule3 ).to be_empty
+		end
+
+
+		it "treats scales present in one schedule as infinite in the other when intersecting" do
+			schedule1 = described_class.parse( 'hr {6am-8am}' )
+			schedule2 = described_class.parse( 'wday {Thu Sat}' )
+			schedule3 = schedule1 & schedule2
+
+			expect( schedule3 ).to be == described_class.parse( 'hr {6am-8am} wday {Thu Sat}' )
 		end
 
 
