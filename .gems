@@ -1,6 +1,5 @@
-hoe-deveiate -v0.3.0
-hoe-bundler -v1.2.0
-simplecov -v0.8.2
-rdoc -v4.1.0
-timecop -v0.8.0
-loggability -v0.11.0
+hoe-deveiate
+simplecov
+rdoc
+timecop
+loggability

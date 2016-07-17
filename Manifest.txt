@@ -11,5 +11,7 @@ lib/schedulability/mixins.rb
 lib/schedulability/parser.rb
 lib/schedulability/schedule.rb
 spec/helpers.rb
+spec/schedulability/mixins_spec.rb
+spec/schedulability/parser_spec.rb
 spec/schedulability/schedule_spec.rb
 spec/schedulability_spec.rb

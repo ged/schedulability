@@ -33,9 +33,9 @@ hoespec = Hoe.spec 'schedulability' do
 	self.dependency 'loggability',     '~> 0.11'
 
 	self.dependency 'timecop',         '~> 0.8', :developer
-	self.dependency 'hoe-deveiate',    '~> 0.4', :developer
-	self.dependency 'hoe-bundler',     '~> 1.2', :developer
-	self.dependency 'simplecov',       '~> 0.7', :developer
+	self.dependency 'rdoc',            '~> 4.2', :developer
+	self.dependency 'hoe-deveiate',    '~> 0.8', :developer
+	self.dependency 'simplecov',       '~> 0.12', :developer
 
 	self.license "BSD-3-Clause"
 	self.require_ruby_version( '>=2.2.0' )
