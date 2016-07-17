@@ -93,7 +93,6 @@ module Schedulability::Parser
 		expression.strip.downcase.split( /\s*,\s*/ ).each do |subexpr|
 			hash, negative = self.extract_period( subexpr )
 			if negative
-				self.log.debug "Adding %p to the negative "
 				negative_periods << hash
 			else
 				positive_periods << hash
@@ -110,7 +109,6 @@ module Schedulability::Parser
 		scanner = StringScanner.new( expression )
 
 		negative = scanner.skip( /\s*(!|not |except )\s*/ )
-		self.log.debug "Period %p is %snegative!" % [ expression, negative ? "" : "not " ]
 
 		while scanner.scan( PERIOD_PATTERN )
 			ranges = scanner[:ranges].strip
@@ -257,15 +255,11 @@ module Schedulability::Parser
 	### +index_arrays+ for non-numeric values. Construct the Ranges with the given
 	### +minval+/+maxval+ range boundaries.
 	def extract_ranges( scale, ranges, minval, maxval )
-		self.log.debug "Extracting range using %p scale: %p (min: %p, max: %p)" %
-			[ scale, ranges, minval, maxval ]
 		exclude_end = EXCLUSIVE_RANGED_SCALES.include?( scale )
 		valid_range = Range.new( minval, maxval, exclude_end )
 
 		ints = ranges.split( /(?<!-)\s+(?!-)/ ).flat_map do |range|
-			self.log.debug "Raw range: %p" % [ range ]
 			min, max = range.split( /\s*-\s*/, 2 )
-			self.log.debug "Min = %p, max = %p" % [ min, max ]
 
 			min = yield( min )
 			raise Schedulability::ParseError, "invalid %s value: %p" % [ scale, min ] unless
@@ -275,10 +269,8 @@ module Schedulability::Parser
 			max = yield( max )
 			raise Schedulability::ParseError, "invalid %s value: %p" % [ scale, max ] unless
 				valid_range.cover?( max )
-			self.log.debug "Parsed min = %p, max = %p" % [ min, max ]
 
 			if min > max
-				self.log.debug "wrapped: %d-%d and %d-%d" % [ minval, max, min, maxval ]
 				Range.new( minval, max, exclude_end ).to_a +
 					Range.new( min, maxval, false ).to_a
 			else
@@ -293,8 +285,6 @@ module Schedulability::Parser
 	### Coalese an Array of non-contiguous Range objects from the specified +ints+ for +scale+.
 	def coalesce_ranges( ints, scale )
 		exclude_end = EXCLUSIVE_RANGED_SCALES.include?( scale )
-		self.log.debug "Coalescing %d ints to Ranges (%p, %s)" %
-			[ ints.size, ints, exclude_end ? "exclusive" : "inclusive" ]
 		ints.flatten!
 		return [] if ints.empty?
 
@@ -308,8 +298,6 @@ module Schedulability::Parser
 			last_val = values.last
 			last_val += 1 if exclude_end
 			Range.new( values.first, last_val, exclude_end )
-		end.tap do |ranges|
-			self.log.debug "Coalesced range integers to Ranges: %p" % [ ranges ]
 		end
 	end
 
