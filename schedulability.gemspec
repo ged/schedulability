@@ -1,14 +1,15 @@
 # -*- encoding: utf-8 -*-
-# stub: schedulability 0.2.0.pre20160717085928 ruby lib
+# stub: schedulability 0.3.0.pre20160720151839 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "schedulability"
-  s.version = "0.2.0.pre20160717085928"
+  s.version = "0.3.0.pre20160720151839"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Michael Granger", "Mahlon E. Smith"]
-  s.date = "2016-07-17"
+  s.cert_chain = ["/Users/ged/.gem/gem-public_cert.pem"]
+  s.date = "2016-07-20"
   s.description = "Schedulability is a library for describing scheduled time. You can specify one\nor more periods of time using a simple syntax, then combine them to describe\nmore-complex schedules."
   s.email = ["ged@FaerieMUD.org", "mahlon@martini.nu"]
   s.extra_rdoc_files = ["History.md", "Manifest.txt", "README.md", "History.md", "README.md"]
