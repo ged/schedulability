@@ -62,7 +62,6 @@ class Schedulability::Schedule
 				time.to_time
 			else
 				time_obj = Time.parse( time.to_s )
-				self.log.debug "Parsed %p to time %p" % [ time, time_obj ]
 				time_obj
 			end
 
@@ -188,7 +187,6 @@ class Schedulability::Schedule
 		when :wk
 			return ( time.day / 7.0 ).ceil
 		when :yr
-			self.log.debug "Year match: %p" % [ time.year ]
 			return time.year
 		else
 			# If this happens, it's likely a bug in the parser.
