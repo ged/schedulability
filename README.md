@@ -233,7 +233,7 @@ used under the terms of the Perl Artistic License.
 
 The rest is:
 
-Copyright (c) 2015, Michael Granger and Mahlon E. Smith
+Copyright (c) 2015-2016, Michael Granger and Mahlon E. Smith
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
