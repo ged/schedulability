@@ -346,6 +346,62 @@ describe Schedulability::Schedule do
 		end
 
 
+
+		it "handles 12am correctly" do
+			schedule = described_class.parse( "hr {12am}" )
+			time = Time.iso8601( '2015-12-15T00:00:00-00:00' )
+
+			expect( schedule ).to_not include( time - 1 )
+			expect( schedule ).to include( time )
+			expect( schedule ).to include( time + 1.minute )
+			expect( schedule ).to include( time + 20.minutes )
+			expect( schedule ).to include( time + (1.hour - 1.minute) )
+			expect( schedule ).to_not include( time + 1.hour )
+			expect( schedule ).to_not include( time + 3.hours )
+		end
+
+
+		it "handles am times correctly" do
+			schedule = described_class.parse( "hr {9am}" )
+			time = Time.iso8601( '2015-12-15T09:00:00-00:00' )
+
+			expect( schedule ).to_not include( time - 1 )
+			expect( schedule ).to include( time )
+			expect( schedule ).to include( time + 1.minute )
+			expect( schedule ).to include( time + 20.minutes )
+			expect( schedule ).to include( time + (1.hour - 1.minute) )
+			expect( schedule ).to_not include( time + 1.hour )
+			expect( schedule ).to_not include( time + 3.hours )
+		end
+
+
+		it "handles 0 correctly" do
+			schedule = described_class.parse( "hr {0}" )
+			time = Time.iso8601( '2015-12-15T00:00:00-00:00' )
+
+			expect( schedule ).to_not include( time - 1 )
+			expect( schedule ).to include( time )
+			expect( schedule ).to include( time + 1.minute )
+			expect( schedule ).to include( time + 20.minutes )
+			expect( schedule ).to include( time + (1.hour - 1.minute) )
+			expect( schedule ).to_not include( time + 1.hour )
+			expect( schedule ).to_not include( time + 3.hours )
+		end
+
+
+		it "allows hour values equal to 0" do
+			expect {
+				described_class.parse( 'hr {0}' )
+			}.not_to raise_error
+			expect {
+				described_class.parse( 'hr {0 5 10}' )
+			}.not_to raise_error
+			expect {
+				described_class.parse( 'hr {0-23}' )
+			}.not_to raise_error
+		end
+
+
 		it "matches single day number values as a 86400-second exclusive range" do
 			schedule = described_class.parse( "md {11}" )
 
@@ -926,4 +982,3 @@ describe Schedulability::Schedule do
 	end
 
 end
-
