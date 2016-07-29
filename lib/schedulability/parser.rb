@@ -240,11 +240,16 @@ module Schedulability::Parser
 		if qualifier
 			raise Schedulability::RangeError, "invalid hour value: %p" % [ time_value ] if
 				hour > 12
-			hour += 12 if qualifier == 'pm' && hour < 12
+
+			if qualifier == 'am' && hour == 12
+				hour = 0
+			elsif qualifier == 'pm' && hour < 12
+				hour += 12
+			end
+
 		else
 			raise Schedulability::RangeError, "invalid hour value: %p" % [ time_value ] if
-				hour > 24
-			hour = 24 if hour.zero?
+				hour < 0 || hour > 24
 		end
 
 		return hour
@@ -328,4 +333,3 @@ module Schedulability::Parser
 	end
 
 end # module Schedulability::Parser
-
