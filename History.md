@@ -1,3 +1,10 @@
+## v0.3.0 [2016-07-29] Michael Granger <ged@FaerieMUD.org>
+
+Bugfix:
+- Add support for 0th hour and 12am (thanks to 
+  Meining Lu <meining@getupperhand.com> on Github for the patch)
+
+
 ## v0.2.0 [2016-07-20] Michael Granger <ged@FaerieMUD.org>
 
 Bugfixes:
