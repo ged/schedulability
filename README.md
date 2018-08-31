@@ -158,10 +158,10 @@ Schedules are immutable after they're created, but they have mutator methods to
 allow you to compose the schedule you want by combining them, or by using
 mutator methods that return a changed copy of the original:
 
-    weekend = Schedulability::Schedule( "wd {Sat - Sun}" )
-    weekdays = Schedulability::Schedule( "wd {Mon - Fri}" )
-    work_hours = Schedulability::Schedule( "hour {9am - 5pm}" )
-    off_hours = Schedulability::Schedule( "hour {5pm - 9am}" )
+    weekend = Schedulability::Schedule.parse( "wd {Sat - Sun}" )
+    weekdays = Schedulability::Schedule.parse( "wd {Mon - Fri}" )
+    work_hours = Schedulability::Schedule.parse( "hour {9am - 5pm}" )
+    off_hours = Schedulability::Schedule.parse( "hour {5pm - 9am}" )
 
     ### Boolean operators
     on_duty = weekdays | work_hours
@@ -233,7 +233,7 @@ used under the terms of the Perl Artistic License.
 
 The rest is:
 
-Copyright (c) 2015-2016, Michael Granger and Mahlon E. Smith
+Copyright (c) 2015-2018, Michael Granger and Mahlon E. Smith
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
