@@ -67,7 +67,7 @@ class Schedulability::Schedule
 
 		return ! self.negative_periods_include?( time_obj ) &&
 			self.positive_periods_include?( time_obj )
-	 end
+	end
 
 
 	 ### Returns +true+ if any of the schedule's positive periods include the
@@ -75,12 +75,12 @@ class Schedulability::Schedule
 	 def positive_periods_include?( time )
 		return self.positive_periods.empty? ||
 			find_matching_period_for( time, self.positive_periods )
-	 end
+	end
 
 
-	 ### Returns +true+ if any of the schedule's negative periods include the
-	 ### specified +time+.
-	 def negative_periods_include?( time )
+	### Returns +true+ if any of the schedule's negative periods include the
+	### specified +time+.
+	def negative_periods_include?( time )
 		return find_matching_period_for( time, self.negative_periods )
 	end
 
