@@ -1,3 +1,10 @@
+## v0.4.1 [2018-09-12] Michael Granger <ged@FaerieMUD.org>
+
+Bugfixes:
+
+- Fix more indentation warnings
+
+
 ## v0.4.0 [2018-09-12] Michael Granger <ged@FaerieMUD.org>
 
 Bugfixes:
