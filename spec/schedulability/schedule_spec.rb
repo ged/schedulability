@@ -5,10 +5,7 @@ require_relative '../helpers'
 require 'time'
 require 'timecop'
 require 'schedulability/schedule'
-require 'schedulability/mixins'
 
-
-using Schedulability::TimeRefinements
 
 describe Schedulability::Schedule do
 
@@ -184,11 +181,11 @@ describe Schedulability::Schedule do
 			schedule = described_class.parse( "sec {18}" )
 			time = Time.iso8601( '2015-12-15T12:00:18-00:00' )
 
-			expect( schedule ).to_not include( time - 2.seconds )
-			expect( schedule ).to_not include( time - 1.second )
+			expect( schedule ).to_not include( time - 2 )
+			expect( schedule ).to_not include( time - 1 )
 			expect( schedule ).to include( time )
-			expect( schedule ).to_not include( time + 1.second )
-			expect( schedule ).to_not include( time + 2.seconds )
+			expect( schedule ).to_not include( time + 1 )
+			expect( schedule ).to_not include( time + 2 )
 		end
 
 
@@ -196,11 +193,11 @@ describe Schedulability::Schedule do
 			schedule = described_class.parse( "except sec {18}" )
 			time = Time.iso8601( '2015-12-15T12:00:18-00:00' )
 
-			expect( schedule ).to include( time - 2.seconds )
-			expect( schedule ).to include( time - 1.second )
+			expect( schedule ).to include( time - 2 )
+			expect( schedule ).to include( time - 1 )
 			expect( schedule ).to_not include( time )
-			expect( schedule ).to include( time + 1.second )
-			expect( schedule ).to include( time + 2.seconds )
+			expect( schedule ).to include( time + 1 )
+			expect( schedule ).to include( time + 2 )
 		end
 
 
@@ -208,12 +205,12 @@ describe Schedulability::Schedule do
 			schedule = described_class.parse( "sec {10-20}" )
 			time = Time.iso8601( '2015-12-15T12:00:10-00:00' )
 
-			expect( schedule ).to_not include( time - 2.seconds )
-			expect( schedule ).to_not include( time - 1.second )
+			expect( schedule ).to_not include( time - 2 )
+			expect( schedule ).to_not include( time - 1 )
 			expect( schedule ).to include( time )
-			expect( schedule ).to include( time + 1.second )
-			expect( schedule ).to include( time + 9.seconds )
-			expect( schedule ).to_not include( time + 10.seconds )
+			expect( schedule ).to include( time + 1 )
+			expect( schedule ).to include( time + 9 )
+			expect( schedule ).to_not include( time + 10 )
 		end
 
 
@@ -221,15 +218,15 @@ describe Schedulability::Schedule do
 			schedule = described_class.parse( "sec {45-15}" )
 			time = Time.iso8601( '2015-12-15T12:00:45-00:00' )
 
-			expect( schedule ).to_not include( time - 2.seconds )
-			expect( schedule ).to_not include( time - 1.second )
+			expect( schedule ).to_not include( time - 2 )
+			expect( schedule ).to_not include( time - 1 )
 			expect( schedule ).to include( time )
-			expect( schedule ).to include( time + 1.second )
-			expect( schedule ).to include( time + 14.seconds )
-			expect( schedule ).to include( time + 15.seconds )
-			expect( schedule ).to include( time + 20.seconds )
-			expect( schedule ).to include( time + 29.seconds )
-			expect( schedule ).to_not include( time + 30.seconds )
+			expect( schedule ).to include( time + 1 )
+			expect( schedule ).to include( time + 14 )
+			expect( schedule ).to include( time + 15 )
+			expect( schedule ).to include( time + 20 )
+			expect( schedule ).to include( time + 29 )
+			expect( schedule ).to_not include( time + 30 )
 		end
 
 
@@ -237,13 +234,13 @@ describe Schedulability::Schedule do
 			schedule = described_class.parse( "min {28}" )
 			time = Time.iso8601( '2015-12-15T12:28:00-00:00' )
 
-			expect( schedule ).to_not include( time - 15.seconds )
-			expect( schedule ).to_not include( time - 1.second )
+			expect( schedule ).to_not include( time - 15 )
+			expect( schedule ).to_not include( time - 1 )
 			expect( schedule ).to include( time )
-			expect( schedule ).to include( time + 38.seconds )
-			expect( schedule ).to include( time + 59.seconds )
-			expect( schedule ).to_not include( time + 1.minute )
-			expect( schedule ).to_not include( time + 2.minutes )
+			expect( schedule ).to include( time + 38 )
+			expect( schedule ).to include( time + 59 )
+			expect( schedule ).to_not include( time + 60 )
+			expect( schedule ).to_not include( time + 2 * 60 )
 		end
 
 
@@ -251,13 +248,13 @@ describe Schedulability::Schedule do
 			schedule = described_class.parse( "min {25-35}" )
 			time = Time.iso8601( '2015-12-15T12:25:00-00:00' )
 
-			expect( schedule ).to_not include( time - 2.minutes )
-			expect( schedule ).to_not include( time - 1.second )
+			expect( schedule ).to_not include( time - 60 )
+			expect( schedule ).to_not include( time - 1 )
 			expect( schedule ).to include( time )
-			expect( schedule ).to include( time + 1.minute )
-			expect( schedule ).to include( time + 9.minutes )
-			expect( schedule ).to include( time + 9.minutes + 59.seconds )
-			expect( schedule ).to_not include( time + 10.minutes )
+			expect( schedule ).to include( time + 60 )
+			expect( schedule ).to include( time + 9 * 60 )
+			expect( schedule ).to include( time + (9 * 60) + 59 )
+			expect( schedule ).to_not include( time + 10 * 60 )
 		end
 
 
@@ -265,18 +262,18 @@ describe Schedulability::Schedule do
 			schedule = described_class.parse( "min {50-15}" )
 			time = Time.iso8601( '2015-12-15T12:50:00-00:00' )
 
-			expect( schedule ).to_not include( time - 1.minute )
-			expect( schedule ).to_not include( time - 1.second )
+			expect( schedule ).to_not include( time - 60 )
+			expect( schedule ).to_not include( time - 1 )
 			expect( schedule ).to include( time )
-			expect( schedule ).to include( time + 1.second )
-			expect( schedule ).to include( time + 1.minute )
-			expect( schedule ).to include( time + 9.minutes )
-			expect( schedule ).to include( time + 9.minutes + 59.seconds )
-			expect( schedule ).to include( time + 10.minutes )
-			expect( schedule ).to include( time + 20.minutes )
-			expect( schedule ).to include( time + 24.minutes )
-			expect( schedule ).to include( time + 24.minutes + 59.seconds )
-			expect( schedule ).to_not include( time + 25.minutes )
+			expect( schedule ).to include( time + 1 )
+			expect( schedule ).to include( time + 60 )
+			expect( schedule ).to include( time + 9 * 60 )
+			expect( schedule ).to include( time + 9 * 60 + 59 )
+			expect( schedule ).to include( time + 10 * 60 )
+			expect( schedule ).to include( time + 20 * 60 )
+			expect( schedule ).to include( time + 24 * 60 )
+			expect( schedule ).to include( time + 24 * 60 + 59 )
+			expect( schedule ).to_not include( time + 25 * 60 )
 		end
 
 
@@ -286,11 +283,11 @@ describe Schedulability::Schedule do
 
 			expect( schedule ).to_not include( time - 1 )
 			expect( schedule ).to include( time )
-			expect( schedule ).to include( time + 1.minute )
-			expect( schedule ).to include( time + 20.minutes )
-			expect( schedule ).to include( time + (1.hour - 1.minute) )
-			expect( schedule ).to_not include( time + 1.hour )
-			expect( schedule ).to_not include( time + 3.hours )
+			expect( schedule ).to include( time + 60 )
+			expect( schedule ).to include( time + 20 * 60 )
+			expect( schedule ).to include( time + (3600 - 60) )
+			expect( schedule ).to_not include( time + 3600 )
+			expect( schedule ).to_not include( time + 3 * 3600 )
 		end
 
 
@@ -298,15 +295,15 @@ describe Schedulability::Schedule do
 			schedule = described_class.parse( "hr {9am-5pm}" )
 			time = Time.iso8601( '2015-12-15T09:00:00-00:00' )
 
-			expect( schedule ).to_not include( time - 12.hours )
-			expect( schedule ).to_not include( time - 10.minutes )
-			expect( schedule ).to_not include( time - 1.second )
+			expect( schedule ).to_not include( time - 12 * 3600 )
+			expect( schedule ).to_not include( time - 10 * 60 )
+			expect( schedule ).to_not include( time - 1 )
 			expect( schedule ).to include( time )
-			expect( schedule ).to include( time + 1.minute )
-			expect( schedule ).to include( time + 1.hour )
-			expect( schedule ).to include( time + 7.hours )
-			expect( schedule ).to include( time + (8.hours - 1.second) )
-			expect( schedule ).to_not include( time + 8.hours )
+			expect( schedule ).to include( time + 60 )
+			expect( schedule ).to include( time + 3600 )
+			expect( schedule ).to include( time + 7 * 3600 )
+			expect( schedule ).to include( time + (8 * 3600 - 1) )
+			expect( schedule ).to_not include( time + 8 * 3600 )
 		end
 
 
@@ -314,21 +311,21 @@ describe Schedulability::Schedule do
 			schedule = described_class.parse( "hr {5pm-9am}" )
 			time = Time.iso8601( '2015-12-15T17:00:00-00:00' )
 
-			expect( schedule ).to_not include( time - 1.hour )
-			expect( schedule ).to_not include( time - 1.second )
+			expect( schedule ).to_not include( time - 3600 )
+			expect( schedule ).to_not include( time - 1 )
 			expect( schedule ).to include( time )
-			expect( schedule ).to include( time + 1.second )
-			expect( schedule ).to include( time + 1.minute )
-			expect( schedule ).to include( time + 10.minutes )
-			expect( schedule ).to include( time + 2.hours )
-			expect( schedule ).to include( time + (7.hours - 1.second) )
-			expect( schedule ).to include( time + 7.hours )
-			expect( schedule ).to include( time + 12.hours )
-			expect( schedule ).to include( time + (16.hours - 1.second) )
-			expect( schedule ).to include( time + 24.hours )
-			expect( schedule ).to_not include( time + (24.hours - 1.second) )
-			expect( schedule ).to_not include( time + 16.hours )
-			expect( schedule ).to_not include( time + 18.hours )
+			expect( schedule ).to include( time + 1 )
+			expect( schedule ).to include( time + 60 )
+			expect( schedule ).to include( time + 10 * 60 )
+			expect( schedule ).to include( time + 2 * 3600 )
+			expect( schedule ).to include( time + (7 * 3600 - 1) )
+			expect( schedule ).to include( time + 7 * 3600 )
+			expect( schedule ).to include( time + 12 * 3600 )
+			expect( schedule ).to include( time + (16 * 3600 - 1) )
+			expect( schedule ).to include( time + 24 * 3600 )
+			expect( schedule ).to_not include( time + (24 * 3600 - 1) )
+			expect( schedule ).to_not include( time + 16 * 3600 )
+			expect( schedule ).to_not include( time + 18 * 3600 )
 		end
 
 
@@ -338,11 +335,11 @@ describe Schedulability::Schedule do
 
 			expect( schedule ).to_not include( time - 1 )
 			expect( schedule ).to include( time )
-			expect( schedule ).to include( time + 1.minute )
-			expect( schedule ).to include( time + 20.minutes )
-			expect( schedule ).to include( time + (1.hour - 1.minute) )
-			expect( schedule ).to_not include( time + 1.hour )
-			expect( schedule ).to_not include( time + 3.hours )
+			expect( schedule ).to include( time + 60 )
+			expect( schedule ).to include( time + 20 * 60 )
+			expect( schedule ).to include( time + (3600 - 60) )
+			expect( schedule ).to_not include( time + 3600 )
+			expect( schedule ).to_not include( time + 3 * 3600 )
 		end
 
 
@@ -353,11 +350,11 @@ describe Schedulability::Schedule do
 
 			expect( schedule ).to_not include( time - 1 )
 			expect( schedule ).to include( time )
-			expect( schedule ).to include( time + 1.minute )
-			expect( schedule ).to include( time + 20.minutes )
-			expect( schedule ).to include( time + (1.hour - 1.minute) )
-			expect( schedule ).to_not include( time + 1.hour )
-			expect( schedule ).to_not include( time + 3.hours )
+			expect( schedule ).to include( time + 60 )
+			expect( schedule ).to include( time + 20 * 60 )
+			expect( schedule ).to include( time + (3600 - 60) )
+			expect( schedule ).to_not include( time + 3600 )
+			expect( schedule ).to_not include( time + 3 * 3600 )
 		end
 
 
@@ -367,11 +364,11 @@ describe Schedulability::Schedule do
 
 			expect( schedule ).to_not include( time - 1 )
 			expect( schedule ).to include( time )
-			expect( schedule ).to include( time + 1.minute )
-			expect( schedule ).to include( time + 20.minutes )
-			expect( schedule ).to include( time + (1.hour - 1.minute) )
-			expect( schedule ).to_not include( time + 1.hour )
-			expect( schedule ).to_not include( time + 3.hours )
+			expect( schedule ).to include( time + 60 )
+			expect( schedule ).to include( time + 20 * 60 )
+			expect( schedule ).to include( time + (3600 - 60) )
+			expect( schedule ).to_not include( time + 3600 )
+			expect( schedule ).to_not include( time + 3 * 3600 )
 		end
 
 
@@ -381,11 +378,11 @@ describe Schedulability::Schedule do
 
 			expect( schedule ).to_not include( time - 1 )
 			expect( schedule ).to include( time )
-			expect( schedule ).to include( time + 1.minute )
-			expect( schedule ).to include( time + 20.minutes )
-			expect( schedule ).to include( time + (1.hour - 1.minute) )
-			expect( schedule ).to_not include( time + 1.hour )
-			expect( schedule ).to_not include( time + 3.hours )
+			expect( schedule ).to include( time + 60 )
+			expect( schedule ).to include( time + 20 * 60 )
+			expect( schedule ).to include( time + (3600 - 60) )
+			expect( schedule ).to_not include( time + 3600 )
+			expect( schedule ).to_not include( time + 3 * 3600 )
 		end
 
 
