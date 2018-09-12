@@ -70,9 +70,9 @@ class Schedulability::Schedule
 	end
 
 
-	 ### Returns +true+ if any of the schedule's positive periods include the
-	 ### specified +time+.
-	 def positive_periods_include?( time )
+	### Returns +true+ if any of the schedule's positive periods include the
+	### specified +time+.
+	def positive_periods_include?( time )
 		return self.positive_periods.empty? ||
 			find_matching_period_for( time, self.positive_periods )
 	end
