@@ -1,10 +1,5 @@
-.editorconfig
-.simplecov
-ChangeLog
 History.md
-Manifest.txt
 README.md
-Rakefile
 lib/schedulability.rb
 lib/schedulability/exceptions.rb
 lib/schedulability/parser.rb

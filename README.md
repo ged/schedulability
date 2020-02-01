@@ -1,10 +1,7 @@
 # schedulability
 
 home
-: http://deveiate.org/projects/schedulability
-
-code
-: http://bitbucket.org/ged/schedulability
+: https://hg.sr.ht/~ged/Schedulability
 
 docs
 : http://deveiate.org/code/schedulability
@@ -109,7 +106,7 @@ Values for week days and months can be abbreviated to three characters
 <dd>Monday through Friday, 9am to 5pm</dd>
 
 <dt><code>wd {Mon Wed Fri} hr {9am-4pm}, wd{Tue Thu} hr {9am-2pm}</code></dt>
-<dd>Monday through Friday, 9:00:00am to 3:59:59pm on Monday, Wednesday, and 
+<dd>Monday through Friday, 9:00:00am to 3:59:59pm on Monday, Wednesday, and
 	Friday, and 9:00:00am to 1:59:59pm on Tuesday and Thursday</dd>
 
 <dt><code>wk {1 3 5} wd {Mon-Fri} hr {9am-5pm}</code></dt>
@@ -143,14 +140,14 @@ Values for week days and months can be abbreviated to three characters
 <dd>Alternating 5-second periods every hour.</dd>
 
 <dt><code>wd {mon wed fri} hr {8am - 5pm}, except day {1}</code></dt>
-<dd>Every Monday, Wednesday, and Friday from 8am until 4:59:59 PM, except on 
+<dd>Every Monday, Wednesday, and Friday from 8am until 4:59:59 PM, except on
 	the first of the month.</dd>
 
 <dt><code>wd {1 3 5 7} min {0-29}, wd {2 4 6} min {30-59}</code></dt>
 <dd>Every first half-hour on alternating week days, and the second half-hour the
   rest of the week.</dd>
 </dl>
-        
+
 
 ### Schedule Objects
 
@@ -218,6 +215,12 @@ This task will install any missing dependencies, run the tests/specs,
 and generate the API documentation.
 
 
+## Authors
+
+- Michael Granger <ged@faeriemud.org>
+- Mahlon E. Smith <mahlon@martini.nu>
+
+
 ## License
 
 This library borrows much of its schedule description syntax and several
@@ -226,14 +229,14 @@ used under the terms of the Perl Artistic License.
 
 > Patrick Ryan <perl@pryan.org> wrote it.
 > Paul Boyd <pboyd@cpan.org> fixed a few bugs.
-> 
-> Copyright (c) 1997 Patrick Ryan. All rights reserved. This Perl 
+>
+> Copyright (c) 1997 Patrick Ryan. All rights reserved. This Perl
 > module uses the conditions given by Perl. This module may only
 > be distributed and or modified under the conditions given by Perl.
 
 The rest is:
 
-Copyright (c) 2015-2018, Michael Granger and Mahlon E. Smith
+Copyright (c) 2015-2020, Michael Granger and Mahlon E. Smith
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

@@ -30,17 +30,20 @@ end # module Schedulability::SpecHelpers
 
 
 ### Mock with RSpec
-RSpec.configure do |c|
-	c.run_all_when_everything_filtered = true
-	c.filter_run :focus
-	c.order = 'random'
-	c.warnings = true
+RSpec.configure do |config|
+	config.run_all_when_everything_filtered = true
+	config.filter_run :focus
+	config.order = 'random'
+	config.warnings = true
 
-	c.mock_with( :rspec ) do |mock|
+	config.mock_with( :rspec ) do |mock|
 		mock.syntax = :expect
 	end
 
-	c.include( Loggability::SpecHelpers )
-	c.include( Schedulability::SpecHelpers )
+	config.warnings = true
+	config.profile_examples = 5
+
+	config.include( Loggability::SpecHelpers )
+	config.include( Schedulability::SpecHelpers )
 end
 
