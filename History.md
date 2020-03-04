@@ -1,3 +1,14 @@
+# Release History for schedulability
+
+---
+
+## v0.5.0 [2020-03-04] Michael Granger <ged@faeriemud.org>
+
+Improvements:
+
+- Update for Ruby 2.7
+
+
 ## v0.4.1 [2018-09-12] Michael Granger <ged@FaerieMUD.org>
 
 Bugfixes:

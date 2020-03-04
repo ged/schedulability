@@ -10,7 +10,7 @@ module Schedulability
 	extend Loggability
 
 	# Package version constant
-	VERSION = '0.4.1'
+	VERSION = '0.5.0'
 
 	# VCS revision
 	REVISION = %q$Revision$
