@@ -1,5 +1,5 @@
 # -*- ruby -*-
-#encoding: utf-8
+# frozen_string_literal: true
 
 require 'loggability'
 require 'schedulability' unless defined?( Schedulability )
@@ -62,7 +62,7 @@ module Schedulability::Parser
 		periods.each do |period|
 			period_string = []
 			period.sort_by{|k, v| k}.each do |scale, ranges|
-				range_string = ""
+				range_string = String.new( encoding: 'utf-8' )
 				range_string << "%s { " % [ scale.to_s ]
 
 				range_strings = ranges.each_with_object( [] ).each do |range, acc|

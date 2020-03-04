@@ -3,11 +3,14 @@
 home
 : https://hg.sr.ht/~ged/Schedulability
 
+code
+: https://hg.sr.ht/~ged/Schedulability
+
 docs
-: http://deveiate.org/code/schedulability
+: https://deveiate.org/code/schedulability
 
 github
-: http://github.com/ged/schedulability
+: https://github.com/ged/schedulability
 
 
 ## Description

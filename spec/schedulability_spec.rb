@@ -7,7 +7,9 @@ require 'rspec'
 require 'schedulability'
 
 
-describe Schedulability do
+RSpec.describe Schedulability do
+
+	# This is just a namespace so there isn't anything to test
 
 end
 

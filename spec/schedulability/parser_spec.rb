@@ -5,7 +5,7 @@ require_relative '../helpers'
 require 'schedulability/parser'
 
 
-describe Schedulability::Parser do
+RSpec.describe Schedulability::Parser do
 
 
 	it "can parse a single time period structure from a string" do

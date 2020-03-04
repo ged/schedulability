@@ -7,7 +7,7 @@ require 'timecop'
 require 'schedulability/schedule'
 
 
-describe Schedulability::Schedule do
+RSpec.describe Schedulability::Schedule do
 
 	before( :all ) do
 		@actual_zone = ENV['TZ']
